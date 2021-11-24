@@ -161,6 +161,32 @@ public:
     }
 
 
+    //Other Funcs
+    inline T trace() const{
+        int sum = 0;
+        for(int i = 0; i < std::min(rows, cols); i++){
+            sum += data[i][i];
+        }
+        return sum;
+    }
+
+    Matrix transpose(){
+        Matrix<T> ret(cols,rows);
+        for(int r = 0; r < rows; r++){
+            for(int c = 0; c < cols; c++){
+                ret.data[c][r] = data[r][c];
+            }
+        }
+        return ret;
+    }
+
+    // T determinant(){
+    //     //Go across top row
+    //     //Create submatrix excluding the column we are currently at
+    //     //Return current_pos * determinant of sub matrix (recursive)
+    // }
+
+
     //Utility
     void print(){
         for(int r = 0; r < rows; r++){
