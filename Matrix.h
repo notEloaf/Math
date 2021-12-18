@@ -24,8 +24,16 @@ public:
         set_mem(r,c);
     }
 
+    void clear(){
+    	// Clean up memory
+    	for(int i = 0; i < rows; i++){
+    		delete[] data[i];
+    	}
+    	delete data;
+    }
+
 // Operator Overloads
-    //Scalar funcs
+    //Scalar Addition Operators
     void operator+=(T a){
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){
@@ -44,6 +52,7 @@ public:
         return m;
     }
 
+    //Scalar Subtraction operators
     void operator-=(T a){
         *this += -a;
     }
@@ -52,6 +61,7 @@ public:
         return *this + (-a);
     }
 
+    //Scalar multipication operators
     void operator*=(T a){
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){
@@ -70,6 +80,7 @@ public:
         return m;
     }
 
+    //Scalar division operators
     void operator/=(T a){
         *this *= 1/a;
     }
@@ -78,6 +89,7 @@ public:
         return *this * (1/a);
     }
 
+    //Sets matrix equal to another (must be the same size)
     void operator=(Matrix a){
         if(!isEqualSize(a)){
             std::cerr << "Error: Matrix add - matrices are not equal size." << std::endl;
@@ -94,6 +106,7 @@ public:
         data = a;
     }
 
+    //Equals function for a 2d array of size (R,C)
     template<size_t R, size_t C>
     void operator=(T (&a)[R][C]){
         set_mem(R,C);
@@ -104,7 +117,7 @@ public:
         }
     }
 
-    //Matrix Functions
+    //Matrix Addition Operations
     void operator+=(Matrix a){
         if(!isEqualSize(a)){
             std::cerr << "Error: Matrix add - matrices are not equal size." << std::endl;
@@ -131,6 +144,8 @@ public:
         return m;
     }
 
+
+    //Matrix Subtraction Operations
     void operator-=(Matrix a){
         *this += (-a);
     }
@@ -139,6 +154,7 @@ public:
         return *this + (-a);
     }
 
+    //Multiplies two matrices together and returns the result
     Matrix operator*(Matrix a){
         if(cols != a.rows){
             std::cerr << "Error: Matrix multiply - rows do not match columns {" << cols << " != " << a.rows << "}." << std::endl;
@@ -161,7 +177,7 @@ public:
     }
 
 
-    //Other Funcs
+    //Returns the Trace of the given matrix(sum of main diagonal)
     inline T trace() const{
         int sum = 0;
         for(int i = 0; i < std::min(rows, cols); i++){
@@ -170,6 +186,7 @@ public:
         return sum;
     }
 
+    //Returns the transposed version of this matrix
     Matrix transpose(){
         Matrix<T> ret(cols,rows);
         for(int r = 0; r < rows; r++){
@@ -187,7 +204,7 @@ public:
     // }
 
 
-    //Utility
+    //Prints out a formatted version of the matrix
     void print(){
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){
@@ -195,11 +212,14 @@ public:
             }
             std::cout << "\n";
         }
+        std::cout << "\n";
     }
 
+    //Operators for easy element access
     float& operator()(int x,int y){
         return data[x][y];
     }
+
     float& operator()(int x,int y) const{
         return data[x][y];
     }
@@ -208,7 +228,7 @@ public:
 
 private:
     
-
+	//Initialises memory for matrix on creation
     void set_mem(int _r, int _c){
         rows = _r;
         cols = _c;
@@ -218,11 +238,13 @@ private:
         }
     }
 
+    //Returns if two matrices is equal
     bool isEqualSize(Matrix &m){
         return (m.rows == rows && m.cols == cols);
     }
 };
 
+//Operation: number * matrix
 template <typename T>
 inline Matrix<T> operator*(const T n, const Matrix<T> &m){
     Matrix<T> ret;
